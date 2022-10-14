@@ -1,0 +1,117 @@
+﻿@page "/"
+@using System.Net.Http.Headers
+@inject INewsService _NewsService
+
+<PageTitle>Buscador de Noticias</PageTitle>
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-10 offset-1">
+            <div class="divFormulario">
+                <h2 class="tituloFormulario">FILTRA NOTICIAS POR PAIS Y CATEGORIA</h2>
+
+                <div class="col-10 offset-1">
+                    <EditForm Model="modelo" OnSubmit="HandleSubmit">
+                        <InputSelect @bind-Value="categoria.Id" class="form-select" id="selectCategoria">
+                            @foreach (var item in modelo.Categorias)
+                            {
+                                <option value="@item.Id">@item.Nombre</option>
+                            }
+                        </InputSelect>
+
+                        <InputSelect @bind-Value="pais.Id" class="form-select mt-3" id="selectPais">
+                            @foreach (var item in modelo.Paises)
+                            {
+                                <option value="@item.Id">@item.Nombre</option>
+                            }
+                        </InputSelect>
+
+                        <button class="btn btnBuscar mt-3" type="submit">Buscar</button>
+                    </EditForm>
+                    
+                </div>
+
+
+                <div class="col-10 offset-1 mt-3">
+                    
+                   
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    @if(spinner)
+    {
+        <div id="app"><div class="spinner" style="margin-top: 50px;"></div></div>
+    }
+
+
+    @if(mostrar)
+    {
+        <div class="row mt-3">
+
+            @foreach (var articulo in response.articles)
+            {
+                <div class="col-lg-6 divArticles">
+                    <img src=@articulo.media height="40%" width="100%" style="margin-top: 5px;">
+                    <div style="height: 60%;">
+                        <p><span class="badge badgeSource">@articulo.rights</span></p>
+                        <p class="titular">@articulo.title</p>
+                        <p class="noticia">@articulo.summary</p>
+                        <a class="btn btnBuscar" href="@articulo.link">Ver Noticia</a>
+                    </div>
+                </div>
+            }
+
+        </div>
+    }
+   
+       
+    
+    
+   
+
+</div>
+
+
+@code {
+
+    static Modelo modelo = new Modelo();
+    protected Categoria categoria = new Categoria();
+
+    Categoria pais = new Categoria();
+
+
+    bool mostrar = false;
+
+    bool spinner = false;
+
+    APIResponse response = new APIResponse();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        categoria.Id = "general";
+        pais.Id = "CU";
+    }
+
+    async Task HandleSubmit()
+    {
+        mostrar = false;
+        spinner = true;
+
+        response = await _NewsService.ObtenerNoticias(categoria.Id, pais.Id);
+
+        spinner = false;
+
+        mostrar = true;
+
+
+    }
+ 
+}

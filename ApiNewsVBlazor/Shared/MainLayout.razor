@@ -1,0 +1,28 @@
+﻿@inherits LayoutComponentBase
+
+@*<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>*@
+
+
+<nav class="navbar" style="background-color: #4965AF;">
+    <div class="container">
+        <span class="navbar-brand" style="font-weight: 700; color: white;">Buscador de Noticias</span>
+    </div>
+</nav>
+
+<div class="container">
+   @Body
+</div>
